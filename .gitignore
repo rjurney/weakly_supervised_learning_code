@@ -4,3 +4,4 @@ wandb
 .DS_Store
 .vscode
 data
+nohup.out
