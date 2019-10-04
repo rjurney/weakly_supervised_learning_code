@@ -6,3 +6,5 @@ wandb
 data
 nohup.out
 models
+simple_log.jsonl
+__pycache__
