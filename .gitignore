@@ -1,0 +1,6 @@
+.ipynb_checkpoints
+venv
+wandb
+.DS_Store
+.vscode
+data
