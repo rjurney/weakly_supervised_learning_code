@@ -3,9 +3,11 @@ boto3
 bert-for-tf2
 cupy-cuda100
 dill
+fast-bert
 frozendict
 gensim
 gpustat
+ipython
 iso8601
 jupyter
 lxml
@@ -20,11 +22,11 @@ s3fs
 seaborn
 scikit-learn
 shap
-snorkel==0.9.1
+#snorkel==0.9.1
 spacy
 tensorflow-gpu==2.0.0
 tensorflow-hub
 textblob
 texttable
-torch==1.1.0
+torch==1.2.0
 wandb
