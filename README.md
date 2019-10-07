@@ -2,6 +2,10 @@
 
 This is the source code for the book *Weakly Supervied Learning: Doing More with Less Data* (O'Reilly, 2020) by Russell Jurney. The book itself is open source and can be found at <https://github.com/rjurney/weakly_supervised_learning> :)
 
+## Things Not to Miss
+
+*Note: Jupyter Notebooks and all other code should be run from this directory. All paths are relevant to this directory.*
+
 ## Install
 
 ### Prerequisites
@@ -33,6 +37,8 @@ conda activate
 ```
 
 ## Jupyter Notebooks
+
+*Note: Jupyter Notebooks and all other code should be run from this directory. All paths are relevant to this directory.*
 
 Each chapter directory has one or more Jupyter Notebooks containing the complete text of the book and its examples for you to follow along with. 
 
