@@ -1,5 +1,7 @@
 # Utilities for the book's notebooks
 
+import re
+
 from bs4 import BeautifulSoup
 import nltk
 from nltk.tokenize import RegexpTokenizer
@@ -59,7 +61,7 @@ def extract_text(x, pad=True):
     [code.extract() if code else None for code in codes]
     text = re.sub(r'http\S+', ' ', doc.text)
     tokens = [x for x in tokenizer.tokenize(text) if x not in stop_words]
-    
+
     padded_tokens = []
     if pad:
         padded_tokens = [tokens[i] if len(tokens) > i else PAD_TOKEN for i in range(0, MAX_LEN)]
