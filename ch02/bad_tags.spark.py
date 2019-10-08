@@ -6,20 +6,20 @@ import pyspark.sql.types as T
 
 PATHS = {
     'bad_questions': {
-        'local': 'data/stackoverflow/08-05-2019/Questions.Bad.{}.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Bad.{}.{}.parquet',
+        'local': 'data/stackoverflow/Questions.Bad.{}.{}.parquet',
+        's3': 's3://stackoverflow-events/Questions.Bad.{}.{}.parquet',
     },
     'bad_tag_counts': {
-        'local': 'data/stackoverflow/08-05-2019/TagCounts.Bad.{}.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/TagCounts.Bad.{}.{}.parquet',
+        'local': 'data/stackoverflow/TagCounts.Bad.{}.{}.parquet',
+        's3': 's3://stackoverflow-events/TagCounts.Bad.{}.{}.parquet',
     },
     'one_hot': {
-        'local': 'data/stackoverflow/08-05-2019/Questions.Bad.OneHot.{}.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Bad.OneHot.{}.{}.parquet',
+        'local': 'data/stackoverflow/Questions.Bad.OneHot.{}.{}.parquet',
+        's3': 's3://stackoverflow-events/Questions.Bad.OneHot.{}.{}.parquet',
     },
     'final_tag_examples': {
-        'local': 'data/stackoverflow/08-05-2019/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
-        's3': 's3://stackoverflow-events/08-05-2019/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
+        'local': 'data/stackoverflow/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
+        's3': 's3://stackoverflow-events/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
     },
 }
 # Define a set of paths for each step for local and S3
