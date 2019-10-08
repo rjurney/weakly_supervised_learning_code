@@ -54,8 +54,8 @@ def get_indexes(df):
     return tag_index, index_tag, enumerated_labels
 
 
-def extract_text(x, max_len=200, pad_token='__PAD__', stop_words=True):
-    """Extract non-code text from posts (questions/answers)"""
+def extract_text(x, max_len=200, pad_token='__PAD__', stop_words=stop_words):
+    """Extract and tokenize non-code text from posts (questions/answers)"""
     doc = BeautifulSoup(x, 'lxml')
     codes = doc.find_all('code')
     [code.extract() if code else None for code in codes]
@@ -68,6 +68,15 @@ def extract_text(x, max_len=200, pad_token='__PAD__', stop_words=True):
     else:
         padded_tokens = tokens
     return padded_tokens
+
+
+def extract_text_plain(x):
+    """Extract non-code text from posts (questions/answers)"""
+    doc = BeautifulSoup(x, 'lxml')
+    codes = doc.find_all('code')
+    [code.extract() if code else None for code in codes]
+    text = re.sub(r'http\S+', ' ', doc.text)
+    return text
 
 
 def one_hot_encode(tag_list, enumerated_labels):
