@@ -54,7 +54,7 @@ def get_indexes(df):
     return tag_index, index_tag, enumerated_labels
 
 
-def extract_text(x, pad=True):
+def extract_text(x, max_len=200, pad_token='__PAD__'):
     """Extract non-code text from posts (questions/answers)"""
     doc = BeautifulSoup(x, 'lxml')
     codes = doc.find_all('code')
@@ -63,8 +63,8 @@ def extract_text(x, pad=True):
     tokens = [x for x in tokenizer.tokenize(text) if x not in stop_words]
 
     padded_tokens = []
-    if pad:
-        padded_tokens = [tokens[i] if len(tokens) > i else PAD_TOKEN for i in range(0, MAX_LEN)]
+    if pad_token:
+        padded_tokens = [tokens[i] if len(tokens) > i else pad_token for i in range(0, max_len)]
     else:
         padded_tokens = tokens
     return padded_tokens
