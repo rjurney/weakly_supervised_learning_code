@@ -21,7 +21,16 @@ PATHS = {
         'local': 'data/stackoverflow/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
         's3': 's3://stackoverflow-events/PerTag.Bad.{}.{}.jsonl/{}.{}.jsonl',
     },
+    'final_tag_all': {
+        'local': 'data/stackoverflow/PerTag.Bad.{}.{}.jsonl/*',
+        's3': 's3://stackoverflow-events/PerTag.Bad.{}.{}.jsonl/*',
+    },
+    'final_tag_parquet': {
+        'local': 'data/stackoverflow/PerTag.Bad.{}.{}.parquet',
+        's3': 's3://stackoverflow-events/PerTag.Bad.{}.{}.parquet',
+    }
 }
+
 # Define a set of paths for each step for local and S3
 PATH_SET = 'local'
 
@@ -141,3 +150,21 @@ for i in range(0, tag_total):
     final_examples.coalesce(1).write.mode('overwrite').json(
         PATHS['final_tag_examples'][PATH_SET].format(tag_limit, bad_limit, i, tag_str)
     )
+
+# Specify a schema to load the JSON
+schema = T.StructType([
+    T.StructField("_Body", 
+        T.ArrayType(
+            T.StringType()
+        )
+    ),
+    T.StringType("_Tag"),
+    T.IntegerType("_Index")
+])
+
+final_examples_all = spark.read.json(
+    PATHS['final_tag_all'][PATH_SET].format(tag_limit, bad_limit)
+)
+final_examples_all.coalesce(1).write.mode('overwrite').parquet(
+    PATHS['final_tag_parquet'][PATH_SET].format(tag_limit, bad_limit),
+)
