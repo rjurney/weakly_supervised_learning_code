@@ -20,9 +20,10 @@ pyspark
 requests
 s3fs
 seaborn
+# sentencepiece # Use Github and build/install https://github.com/google/sentencepiece
 scikit-learn
 shap
-#snorkel==0.9.1
+snorkel==0.9.1
 spacy
 tensorflow-gpu==2.0.0
 tensorflow-hub
