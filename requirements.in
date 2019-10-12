@@ -23,7 +23,7 @@ seaborn
 # sentencepiece # Use Github and build/install https://github.com/google/sentencepiece
 scikit-learn
 shap
-snorkel==0.9.1
+# snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
 spacy
 tensorflow-gpu==2.0.0
 tensorflow-hub
