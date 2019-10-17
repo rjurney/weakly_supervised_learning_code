@@ -141,7 +141,7 @@ for i in range(0, tag_total):
     # Select the current label column alone
     final_examples = positive_examples.select(
         '_Body',
-        F.lit(tag_str).alias('_Tag'),
+        F.lit(tag_str).cast(T.IntegerType()).alias('_Tag'),
         F.lit(i).alias('_Index'),
     )
 
@@ -162,9 +162,10 @@ schema = T.StructType([
     T.IntegerType("_Index")
 ])
 
+# Write as one DataFrame
 final_examples_all = spark.read.json(
     PATHS['final_tag_all'][PATH_SET].format(tag_limit, bad_limit)
 )
-final_examples_all.coalesce(1).write.mode('overwrite').parquet(
+final_examples_all.coalesce(20).write.mode('overwrite').parquet(
     PATHS['final_tag_parquet'][PATH_SET].format(tag_limit, bad_limit),
 )
