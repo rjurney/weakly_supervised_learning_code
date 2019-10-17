@@ -4,3 +4,6 @@
 [submodule "snorkel"]
 	path = snorkel
 	url = https://github.com/snorkel-team/snorkel
+[submodule "snorkel-tutorials"]
+	path = snorkel-tutorials
+	url = https://github.com/snorkel-team/snorkel-tutorials
