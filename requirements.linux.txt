@@ -25,7 +25,7 @@ configparser==4.0.2       # via wandb
 cupy-cuda100==6.4.0
 cycler==0.10.0            # via matplotlib
 cymem==2.0.2              # via preshed, spacy, thinc
-decorator==4.4.0          # via ipython, networkx, traitlets
+decorator==4.4.0          # via ipython, traitlets
 defusedxml==0.6.0         # via nbconvert
 dill==0.3.1.1
 docker-pycreds==0.4.0     # via wandb
@@ -48,7 +48,6 @@ graphql-core==2.2.1       # via gql
 grpcio==1.24.1            # via tensorboard, tensorflow-gpu
 h5py==2.10.0              # via keras-applications
 idna==2.8                 # via requests
-imageio==2.6.0            # via scikit-image
 ipykernel==5.1.2          # via ipywidgets, jupyter, jupyter-console, notebook, qtconsole
 ipython-genutils==0.2.0   # via nbformat, notebook, qtconsole, traitlets
 ipython==7.8.0
@@ -69,12 +68,11 @@ kiwisolver==1.1.0         # via matplotlib
 lxml==4.4.1
 markdown==3.1.1           # via tensorboard
 markupsafe==1.1.1         # via jinja2
-matplotlib==3.1.1         # via fastai, scikit-image, seaborn, shap
+matplotlib==3.1.1         # via fastai, seaborn
 mistune==0.8.4            # via nbconvert
 murmurhash==1.0.2         # via preshed, spacy, thinc
 nbconvert==5.6.0          # via jupyter, notebook
 nbformat==4.4.0           # via ipywidgets, nbconvert, notebook
-networkx==2.3             # via scikit-image
 nltk==3.4.5
 notebook==6.0.1           # via jupyter, widgetsnbextension
 numexpr==2.7.0            # via fastai
@@ -89,7 +87,7 @@ parso==0.5.1              # via jedi
 pathtools==0.1.2          # via watchdog
 pexpect==4.7.0            # via ipython
 pickleshare==0.7.5        # via ipython
-pillow==6.2.0             # via fastai, imageio, scikit-image, torchvision
+pillow==6.2.0             # via fastai, torchvision
 pip-tools==4.1.0
 plac==0.9.6               # via spacy, thinc
 preshed==3.0.2            # via spacy, thinc
@@ -109,7 +107,6 @@ pyspark==2.4.4
 python-dateutil==2.8.0    # via botocore, jupyter-client, matplotlib, pandas, wandb
 pytorch-lamb==1.0.0       # via fast-bert
 pytz==2019.3              # via pandas
-pywavelets==1.0.3         # via scikit-image
 pyyaml==5.1.2             # via fastai, watchdog
 pyzmq==18.1.0             # via jupyter-client, notebook
 qtconsole==4.5.5          # via jupyter
@@ -119,14 +116,13 @@ rx==1.6.1                 # via graphql-core
 s3fs==0.3.5
 s3transfer==0.2.1         # via boto3
 sacremoses==0.0.35        # via transformers
-scikit-image==0.15.0      # via shap
 scikit-learn==0.21.3
-scipy==1.3.1              # via fastai, gensim, scikit-image, scikit-learn, seaborn, shap
+scipy==1.3.1              # via fastai, gensim, scikit-learn, seaborn
 seaborn==0.9.0
 send2trash==1.5.0         # via notebook
 sentencepiece==0.1.83     # via transformers
 sentry-sdk==0.12.3        # via wandb
-shap==0.30.2
+git+git://github.com/slundberg/shap@master#egg=shap
 shortuuid==0.5.0          # via wandb
 six==1.12.0               # via absl-py, bleach, blessings, cupy-cuda100, cycler, docker-pycreds, gensim, gpustat, gql, graphql-core, grpcio, h5py, jsonschema, keras-preprocessing, nltk, packaging, pip-tools, promise, prompt-toolkit, protobuf, pyarrow, pyrsistent, python-dateutil, sacremoses, tensorboard, tensorboardx, tensorflow-gpu, tensorflow-hub, torchvision, traitlets, wandb
 smart-open==1.8.4         # via gensim
@@ -149,7 +145,7 @@ thinc==7.1.1              # via spacy
 torch==1.2.0
 torchvision==0.4.0        # via fastai, pytorch-lamb
 tornado==6.0.3            # via ipykernel, jupyter-client, notebook, terminado
-tqdm==4.36.1              # via params-flow, pytorch-lamb, sacremoses, shap, thinc, transformers
+tqdm==4.36.1              # via params-flow, pytorch-lamb, sacremoses, thinc, transformers
 traitlets==4.3.3          # via ipykernel, ipython, ipywidgets, jupyter-client, jupyter-core, nbconvert, nbformat, notebook, qtconsole
 transformers==2.0.0       # via fast-bert
 urllib3==1.25.6           # via botocore, requests, sentry-sdk

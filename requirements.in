@@ -22,7 +22,7 @@ s3fs
 seaborn
 # sentencepiece # Use Github and build/install https://github.com/google/sentencepiece
 scikit-learn
-shap
+git+git://github.com/slundberg/shap@master#egg=shap
 # snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
 spacy
 tensorflow-gpu==2.0.0
