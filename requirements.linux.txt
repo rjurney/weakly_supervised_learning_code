@@ -101,7 +101,7 @@ psutil==5.6.3             # via gpustat, wandb
 ptyprocess==0.6.0         # via pexpect, terminado
 py-params==0.6.4          # via bert-for-tf2, params-flow
 py4j==0.10.7              # via pyspark
-pyarrow==0.15.0
+pyarrow==0.14.1
 pygments==2.4.2           # via ipython, jupyter-console, nbconvert, qtconsole
 pyparsing==2.4.2          # via matplotlib, packaging
 pyrsistent==0.15.4        # via jsonschema
