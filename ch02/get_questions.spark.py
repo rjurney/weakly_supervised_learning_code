@@ -8,7 +8,7 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from lib.utils import (
-    create_labeled_schema, create_label_row_columns, extract_text, extract_text_plain, extract_code, get_indexes, 
+    create_labeled_schema, create_label_row_columns, extract_text, extract_text_plain, extract_code_plain, get_indexes, 
     one_hot_encode,
 )
 
