@@ -4,6 +4,8 @@ from pyspark.sql import SparkSession, Row
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
+from lib.utils import one_hot_encode
+
 PATHS = {
     'bad_questions': {
         'local': 'data/stackoverflow/Questions.Bad.{}.{}.parquet',
@@ -83,32 +85,16 @@ tag_index = {x: i for i, x in enumerated_labels}
 index_tag = {i: x for i, x in enumerated_labels}
 
 
-#
-# One hot encode the questions' tags into a DataFrame
-#
-def one_hot_encode(tag_list, enumerated_labels):
-    """PySpark can't one-hot-encode multilabel data, so we do it ourselves."""
-
-    one_hot_row = []
-    for i, label in enumerated_labels:
-        if index_tag[i] in tag_list:
-            one_hot_row.append(1)
-        else:
-            one_hot_row.append(0)
-    assert(len(one_hot_row) == len(enumerated_labels))
-    return one_hot_row
-
 # One hot encode the data using one_hot_encode()
 one_hot_questions = bad_df.rdd.map(
-    lambda x: Row(_Body=x._Body, _Tags=one_hot_encode(x._Tags, enumerated_labels))
+    lambda x: Row(_Body=x._Body, _Code=x._Code, _Tags=one_hot_encode(x._Tags, enumerated_labels))
 )
 
 # Create a DataFrame out of the one-hot encoded RDD
 schema = T.StructType([
-    T.StructField("_Body", T.ArrayType(
-        T.StringType()
-    )),
-    T.StructField("_Tags", T.ArrayType(
+    T.StringType('_Body'),
+    T.StringType('_Code'),
+    T.StructField('_Tags', T.ArrayType(
         T.IntegerType()
     ))
 ])
@@ -141,6 +127,7 @@ for i in range(0, tag_total):
     # Select the current label column alone
     final_examples = positive_examples.select(
         '_Body',
+        '_Code',
         F.lit(tag_str).cast(T.IntegerType()).alias('_Tag'),
         F.lit(i).alias('_Index'),
     )
@@ -153,11 +140,8 @@ for i in range(0, tag_total):
 
 # Specify a schema to load the JSON
 schema = T.StructType([
-    T.StructField("_Body", 
-        T.ArrayType(
-            T.StringType()
-        )
-    ),
+    T.StringType("_Body"),
+    T.StringType("_Code"),
     T.StringType("_Tag"),
     T.IntegerType("_Index")
 ])
