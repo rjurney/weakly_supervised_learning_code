@@ -3,7 +3,7 @@ boto3
 bert-for-tf2
 cupy-cuda100
 dill
-fast-bert
+# fast-bert
 frozendict
 gensim
 gpustat
@@ -13,7 +13,7 @@ jupyter
 lxml
 nltk
 numpy>=1.16.0
-pandas==0.24.2
+pandas
 pip-tools
 pyarrow==0.14.1
 pyspark
@@ -24,10 +24,11 @@ seaborn
 scikit-learn
 git+git://github.com/slundberg/shap@master#egg=shap
 # snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
+git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
 spacy
 tensorflow-gpu==2.0.0
 tensorflow-hub
 textblob
 texttable
-torch==1.2.0
+torch
 wandb
