@@ -55,7 +55,7 @@ def get_indexes(df):
 
 
 def extract_text(x, max_len=200, pad_token='__PAD__', stop_words=stop_words):
-    """Extract and tokenize non-code text from posts (questions/answers)"""
+    """Extract, remove stopwords and tokenize non-code text from posts (questions/answers)"""
     doc = BeautifulSoup(x, 'lxml')
     codes = doc.find_all('code')
     [code.extract() if code else None for code in codes]
@@ -76,6 +76,14 @@ def extract_text_plain(x):
     codes = doc.find_all('code')
     [code.extract() if code else None for code in codes]
     text = re.sub(r'http\S+', ' ', doc.text)
+    return text
+
+
+def extract_code(x):
+    """Extract code text from posts (questions/answers)"""
+    doc = BeautifulSoup(x, 'lxml')
+    codes = doc.find_all('code')
+    text = ' '.join([c.text for c in codes])
     return text
 
 
