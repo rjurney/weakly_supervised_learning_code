@@ -79,11 +79,11 @@ def extract_text_plain(x):
     return text
 
 
-def extract_code(x):
+def extract_code_plain(x):
     """Extract code text from posts (questions/answers)"""
     doc = BeautifulSoup(x, 'lxml')
     codes = doc.find_all('code')
-    text = ' '.join([c.text for c in codes])
+    text = '\n'.join([c.text for c in codes])
     return text
 
 
