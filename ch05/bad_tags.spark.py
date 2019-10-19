@@ -91,13 +91,18 @@ one_hot_questions = bad_df.rdd.map(
 )
 
 # Create a DataFrame out of the one-hot encoded RDD
-schema = T.StructType([
-    T.StringType('_Body'),
-    T.StringType('_Code'),
-    T.StructField('_Tags', T.ArrayType(
-        T.IntegerType()
-    ))
-])
+schema = T.StructType(
+    [
+        T.StructField('_Body', T.StringType()),
+        T.StructField('_Code', T.StringType()),
+        T.StructField(
+            '_Tags', 
+            T.ArrayType(
+                T.IntegerType()
+            ),
+        )
+    ]
+)
 
 one_hot_df = spark.createDataFrame(
     one_hot_questions,
@@ -140,10 +145,10 @@ for i in range(0, tag_total):
 
 # Specify a schema to load the JSON
 schema = T.StructType([
-    T.StringType("_Body"),
-    T.StringType("_Code"),
-    T.StringType("_Tag"),
-    T.IntegerType("_Index")
+    T.StructField('_Body', T.StringType()),
+    T.StructField('_Code', T.StringType()),
+    T.StructField('_Tag', T.StringType()),
+    T.StructField('_Index', T.IntegerType()),
 ])
 
 # Write as one DataFrame

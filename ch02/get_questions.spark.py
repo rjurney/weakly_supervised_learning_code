@@ -245,8 +245,8 @@ for tag_limit, stratify_limit, lower_limit in \
 
     # Create a DataFrame out of the one-hot encoded RDD
     schema = T.StructType([
-        T.StringType("_Body"),
-        T.StringType("_Code"),
+        T.StructField("_Body", T.StringType()),
+        T.StructField("_Code", T.StringType()),
         T.StructField("_Tags", T.ArrayType(
             T.IntegerType()
         ))

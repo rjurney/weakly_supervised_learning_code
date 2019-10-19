@@ -103,9 +103,8 @@ def one_hot_encode(tag_list, enumerated_labels):
 def create_labeled_schema(one_row):
     """Create a schema naming all one-hot encoded fields label_{}"""
     schema_list = [
-        T.StructField("_Body", T.ArrayType(
-            T.StringType()
-        )),
+        T.StructField("_Body", T.StringType()),
+        T.StructField("_Code", T.StringType()),
     ]
     for i, val in list(enumerate(one_row._Tags)):
         schema_list.append(
