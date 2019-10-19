@@ -232,7 +232,7 @@ for tag_limit, stratify_limit, lower_limit in \
 
     # One hot encode the data using one_hot_encode()
     one_hot_questions = questions_tags.rdd.map(
-        lambda x: Row(_Body=x._Body, _Code=x._Code, _Tags=one_hot_encode(x._Tags, enumerated_labels))
+        lambda x: Row(_Body=x._Body, _Code=x._Code, _Tags=one_hot_encode(x._Tags, enumerated_labels, index_tag))
     )
     if DEBUG is True:
         print(
