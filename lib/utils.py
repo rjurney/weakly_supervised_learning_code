@@ -7,6 +7,9 @@ import nltk
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import numpy as np
+import pyspark.sql.functions as F
+import pyspark.sql.types as T
+
 
 
 # In order to tokenize questions and remove stopwords
