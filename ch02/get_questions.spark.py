@@ -140,6 +140,8 @@ for tag_limit, stratify_limit, lower_limit in \
     #(1000, 1000, 500),
 ]:
 
+    tag_limit, stratify_limit, lower_limit = 2000, 2000, 500
+
     print(f'\n\nStarting run for tag limit {tag_limit:,}, sample size {stratify_limit:,}, and lower limit {lower_limit:,}\n\n')
 
     # Count the instances of each tag
@@ -202,11 +204,9 @@ for tag_limit, stratify_limit, lower_limit in \
     )
 
     # Explicitly recover memory
-    del tag_counts_df
     del bad_tags_df
     del questions_lists
     del bad_questions
-    del bad_questions_df
 
     gc.collect()
 
@@ -222,14 +222,13 @@ for tag_limit, stratify_limit, lower_limit in \
     questions_tags.write.mode('overwrite').parquet(PATHS['questions_tags'][PATH_SET].format(tag_limit))
     questions_tags = spark.read.parquet(PATHS['questions_tags'][PATH_SET].format(tag_limit))
 
-
+    # Create forward and backward indexes for good/bad tags
     tag_index, index_tag, enumerated_labels = get_indexes(remaining_tags_df)
-    bad_tag_index, bad_index_tag, bad_enumerated_labels = get_indexes(bad_questions_df)
 
     # Explicitly free RAM
     del remaining_tags_df
+    del bad_questions_df
     gc.collect()
-
 
     # One hot encode the data using one_hot_encode()
     one_hot_questions = questions_tags.rdd.map(
