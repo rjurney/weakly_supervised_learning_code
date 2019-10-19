@@ -8,8 +8,8 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from lib.utils import (
-    create_labeled_schema, create_label_row_columns, extract_text, extract_text_plain, extract_code_plain, get_indexes, 
-    one_hot_encode,
+    create_labeled_schema, create_label_row_columns, extract_text, extract_text_plain, 
+    extract_code_plain, get_indexes, one_hot_encode,
 )
 
 
@@ -128,22 +128,16 @@ questions = spark.read.parquet(PATHS['questions'][PATH_SET])
 # Count the number of each tag
 all_tags = questions.rdd.flatMap(lambda x: re.sub('[<>]', ' ', x['_Tags']).split())
 
-# Set the length of documents and the token to use to pad documents
-MAX_LEN = 200
-PAD_TOKEN = '__PAD__'
-
-
-
 # Prepare multiple datasets with different tag count frequency filters and per-tag
 # stratified sample sizes
 for tag_limit, stratify_limit, lower_limit in \
 [
-    (50000, 50000, 500),
-    (20000, 10000, 500),
-    (10000, 10000, 500),
-    (5000, 5000, 500),
+    #(50000, 50000, 500),
+    #(20000, 10000, 500),
+    #(10000, 10000, 500),
+    #(5000, 5000, 500),
     (2000, 2000, 500),
-    (1000, 1000, 500),
+    #(1000, 1000, 500),
 ]:
 
     print(f'\n\nStarting run for tag limit {tag_limit:,}, sample size {stratify_limit:,}, and lower limit {lower_limit:,}\n\n')
