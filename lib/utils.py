@@ -87,7 +87,7 @@ def extract_code_plain(x):
     return text
 
 
-def one_hot_encode(tag_list, enumerated_labels):
+def one_hot_encode(tag_list, enumerated_labels, index_tag):
     """PySpark can't one-hot-encode multilabel data, so we do it ourselves."""
 
     one_hot_row = []

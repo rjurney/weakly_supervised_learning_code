@@ -87,7 +87,11 @@ index_tag = {i: x for i, x in enumerated_labels}
 
 # One hot encode the data using one_hot_encode()
 one_hot_questions = bad_df.rdd.map(
-    lambda x: Row(_Body=x._Body, _Code=x._Code, _Tags=one_hot_encode(x._Tags, enumerated_labels))
+    lambda x: Row(
+        _Body=x._Body,
+        _Code=x._Code,
+        _Tags=one_hot_encode(x._Tags, enumerated_labels, index_tag)
+    )
 )
 
 # Create a DataFrame out of the one-hot encoded RDD
