@@ -125,5 +125,6 @@ def create_label_row_columns(x):
     """Create a dict keyed with dynamic args to use to create a Row for this record"""
     args = {f'label_{i}': val for i, val in list(enumerate(x._Tags))}
     args['_Body'] = x._Body
+    args['_Code'] = x._Code
     return Row(**args)
 
