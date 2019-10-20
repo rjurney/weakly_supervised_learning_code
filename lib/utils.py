@@ -7,6 +7,8 @@ import nltk
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import numpy as np
+
+from pyspark.sql import Row
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
