@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+#
+# This script extracts the text and code of Stack Overflow questions (not answers) in separate fields along with one-hot 
+# encoded labels (folksonomy tags, 1-5 each question) for records having at least so many occurrences. To run it locally
+# set PATH_SET to 'local'. For AWS using PATH_SET of 's3'.
+#
+
 import gc
 import json
 import re
