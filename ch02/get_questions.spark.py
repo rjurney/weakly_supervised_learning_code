@@ -140,15 +140,13 @@ all_tags = questions.rdd.flatMap(lambda x: re.sub('[<>]', ' ', x['_Tags']).split
 # stratified sample sizes
 for tag_limit, stratify_limit, lower_limit in \
 [
-    #(50000, 50000, 500),
-    #(20000, 10000, 500),
-    #(10000, 10000, 500),
-    #(5000, 5000, 500),
+    (50000, 50000, 500),
+    (20000, 10000, 500),
+    (10000, 10000, 500),
+    (5000, 5000, 500),
     (2000, 2000, 500),
-    #(1000, 1000, 500),
+    (1000, 1000, 500),
 ]:
-
-    tag_limit, stratify_limit, lower_limit = 2000, 2000, 500
 
     print(f'\n\nStarting run for tag limit {tag_limit:,}, sample size {stratify_limit:,}, and lower limit {lower_limit:,}\n\n')
 
@@ -309,7 +307,8 @@ for tag_limit, stratify_limit, lower_limit in \
     # Avoid RAM problems
     del filtered_lists
     del one_hot_questions
-    del one_hot_df
+    if not REPORT:
+        del one_hot_df
     del positive_examples
     gc.collect()
 
