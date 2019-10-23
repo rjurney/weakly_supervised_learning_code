@@ -34,7 +34,7 @@ PATHS = {
 }
 
 # Define a set of paths for each step for local and S3
-PATH_SET = 'local'
+PATH_SET = 'local' # 's3'
 
 spark = SparkSession.builder\
     .appName('Deep Products - Sample JSON')\
@@ -43,7 +43,7 @@ spark = SparkSession.builder\
     .getOrCreate()
 sc = spark.sparkContext
 
-tag_limit, bad_limit = 2000, 500
+tag_limit, stratify_limit, bad_limit = 2000, 2000, 500
 
 # Load the questions with tags occurring between 2000 - 500 times (note: does not include more numerous tags)
 bad_df = spark.read.parquet(PATHS['bad_questions'][PATH_SET].format(tag_limit, bad_limit))

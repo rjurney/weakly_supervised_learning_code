@@ -28,7 +28,7 @@ DEBUG = False
 REPORT = True
 
 # Define a set of paths for each step for local and S3
-PATH_SET = 'local'
+PATH_SET = 'local' # 's3'
 
 PATHS = {
     's3_bucket': 'stackoverflow-events',
