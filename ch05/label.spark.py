@@ -9,8 +9,12 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from snorkel.labeling.apply.spark import SparkLFApplier
+<<<<<<< HEAD
 from snorkel.labeling import LabelingFunction
 from snorkel.types import DataPoint
+=======
+from snorkel.labeling.lf.nlp_spark import SparkNLPLabelingFunction
+>>>>>>> 7476ef5f3d85d8e85ec048499036239025083381
 
 
 # What limits for tag frequency we're working with
@@ -96,7 +100,6 @@ label_encoded_df = spark.read.parquet(PATHS['label_encoded'][PATH_SET])
 ABSTAIN = -1
 
 def keyword_lookup(x, keywords, label):
-    
     match = any(word in x._Body for word in keywords)
     if match:
         return label
@@ -113,14 +116,6 @@ def make_keyword_lf(keywords, label=ABSTAIN):
 keyword_lfs = OrderedDict()
 for i, tag in enumerated_labels:
     keyword_lfs[tag] = make_keyword_lf(tag.split('-'), label=i)
-
-
-#
-# For now, sample the infrequent tagged records
-#
-SAMPLE_AMOUNT = 10000
-sample_labels = label_encoded_df.limit(SAMPLE_AMOUNT).rdd
-
 
 #
 # Apply labeling functions to get a set of weak labels
