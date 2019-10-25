@@ -9,12 +9,7 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from snorkel.labeling.apply.spark import SparkLFApplier
-<<<<<<< HEAD
 from snorkel.labeling import LabelingFunction
-from snorkel.types import DataPoint
-=======
-from snorkel.labeling.lf.nlp_spark import SparkNLPLabelingFunction
->>>>>>> 7476ef5f3d85d8e85ec048499036239025083381
 
 
 # What limits for tag frequency we're working with
