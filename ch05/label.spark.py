@@ -32,7 +32,7 @@ PATHS = {
         'local': 'data/stackoverflow/Questions.Bad.LabelEncoded.{}.{}.parquet'.format(TAG_LIMIT, BAD_LIMIT),
         's3': 's3://stackoverflow-events/Questions.Bad.LabelEncoded.{}.{}.parquet'.format(TAG_LIMIT, BAD_LIMIT),
     },
-    'weak_labels': 'data/weak_labels.npy',
+    'weak_labels': 'data/stackoverflow/weak_labels.npy',
 }
 
 # Define a set of paths for each step for local and S3
