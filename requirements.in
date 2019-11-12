@@ -1,12 +1,13 @@
 beautifulsoup4
 boto3
-bert-for-tf2
-cupy-cuda100
+# bert-for-tf2
+# cupy-cuda100
 dill
 # fast-bert
 frozendict
 gensim
 gpustat
+guesslang
 ipython
 iso8601
 jupyter
@@ -22,11 +23,12 @@ s3fs
 seaborn
 # sentencepiece # Use Github and build/install https://github.com/google/sentencepiece
 scikit-learn
-git+git://github.com/slundberg/shap@master#egg=shap
+# -e git+git://github.com/slundberg/shap@master#egg=shap
 # snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
-git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
+-e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
 spacy
-tensorflow-gpu==2.0.0
+# tensorflow-gpu==2.0.0
+tensorflow==2.0.0
 tensorflow-hub
 textblob
 texttable
