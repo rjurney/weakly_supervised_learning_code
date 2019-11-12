@@ -26,7 +26,7 @@ scikit-learn
 # -e git+git://github.com/slundberg/shap@master#egg=shap
 # snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
 -e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
-spacy
+spacy[cuda100]
 # tensorflow-gpu==2.0.0
 tensorflow==2.0.0
 tensorflow-hub
