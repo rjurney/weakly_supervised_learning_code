@@ -1,6 +1,6 @@
 #
 # Convert the Stack Overflow data from XML format to Parquet format for performance reasons.
-# Run me with: pyspark/spark-submit --packages com.databricks:spark-xml_2.11:0.7.0
+# Run me with: PYSPARK_PYTHON=python3 PYSPARK_DRIVER_PYTHON=ipython3 pyspark/spark-submit --packages com.databricks:spark-xml_2.11:0.7.0
 #
 
 from pyspark.sql import SparkSession
