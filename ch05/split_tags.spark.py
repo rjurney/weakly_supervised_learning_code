@@ -10,6 +10,7 @@
 
 import gc
 import json
+import random
 import re
 
 import boto3
@@ -36,7 +37,7 @@ DEBUG = False
 REPORT = True
 
 # Define a set of paths for each step for local and S3
-PATH_SET = 's3' # 'local'
+PATH_SET = 'local' # 's3'
 
 PATHS = {
     's3_bucket': 'stackoverflow-events',
@@ -64,13 +65,17 @@ PATHS = {
         'local': 'data/stackoverflow/Questions.Tags.{}.parquet',
         's3': 's3://stackoverflow-events/08-05-2019/Questions.Tags.{}.parquet',
     },
-    'one_hot': {
+    'per_tag': {
+        'local': 'data/stackoverflow/Questions.PerTag.{}.parquet',
+        's3': 's3://stackoverflow-events/08-05-2019/Questions.PerTag.{}.parquet',
+    },
+    'sample_ratios': {
+        'local': 'data/stackoverflow/Tag.SampleRatios.{}.parquet',
+        's3': 's3://stackoverflow-events/08-05-2019/Tag.SampleRatios.{}.parquet',
+    },
+    'sample': {
         'local': 'data/stackoverflow/Questions.Stratified.All.{}.parquet',
         's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.All.{}.parquet',
-    },
-    'output_jsonl': {
-        'local': 'data/stackoverflow/Questions.Stratified.All.{}.{}.jsonl',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.All.{}.{}.jsonl',
     },
     'tag_index': {
         'local': 'data/stackoverflow/all_tag_index.{}.json',
@@ -96,84 +101,85 @@ sc = spark.sparkContext
 #
 # Get answered questions and not their answers
 #
-posts = spark.read.parquet(PATHS['posts'][PATH_SET])
-if DEBUG is True:
-    print('Total posts count: {:,}'.format(
-        posts.count()
-    ))
-questions = posts.filter(posts._ParentId.isNull())\
-                 .filter(posts._AnswerCount > 0)\
-                 .filter(posts._Score > 1)
-if DEBUG is True:
-    print('Total questions count: {:,}'.format(questions.count()))
+# posts = spark.read.parquet(PATHS['posts'][PATH_SET])
+# if DEBUG is True:
+#     print('Total posts count: {:,}'.format(
+#         posts.count()
+#     ))
+# questions = posts.filter(posts._ParentId.isNull())\
+#                  .filter(posts._AnswerCount > 0)\
+#                  .filter(posts._Score > 1)
+# if DEBUG is True:
+#     print('Total questions count: {:,}'.format(questions.count()))
 
-# Combine title with body
-questions = questions.select(
-    F.col('_Id').alias('_PostId'),
-    '_AcceptedAnswerId',
-    F.concat(
-        F.col("_Title"),
-        F.lit(" "),
-        F.col("_Body")
-    ).alias('_Body'),
-    '_Tags',
-    '_AnswerCount',
-    '_CommentCount',
-    '_FavoriteCount',
-    '_OwnerUserId',
-    '_OwnerDisplayName',
-    '_Score',
-    '_ViewCount',
-)
-questions.show()
+# # Combine title with body
+# questions = questions.select(
+#     F.col('_Id').alias('_PostId'),
+#     '_AcceptedAnswerId',
+#     F.concat(
+#         F.col("_Title"),
+#         F.lit(" "),
+#         F.col("_Body")
+#     ).alias('_Body'),
+#     '_Tags',
+#     '_AnswerCount',
+#     '_CommentCount',
+#     '_FavoriteCount',
+#     '_OwnerUserId',
+#     '_OwnerDisplayName',
+#     '_Score',
+#     '_ViewCount',
+# )
+# questions.show()
 
-# Write all questions to a Parquet file, then trim fields
-questions\
-    .write.mode('overwrite')\
-    .parquet(PATHS['questions'][PATH_SET])
-questions_df = spark.read.parquet(PATHS['questions'][PATH_SET])
+# # Write all questions to a Parquet file, then trim fields
+# questions\
+#     .write.mode('overwrite')\
+#     .parquet(PATHS['questions'][PATH_SET])
+# questions_df = spark.read.parquet(PATHS['questions'][PATH_SET])
 
-#
-# Join User records from ch02/xml_to_parquet.py
-#
-users_df = spark.read.parquet(PATHS['users_parquet'][PATH_SET])
-users_df = users_df.withColumn(
-    '_UserId',
-    F.col('_Id')
-).drop('_Id')
+# #
+# # Join User records from ch02/xml_to_parquet.py
+# #
+# users_df = spark.read.parquet(PATHS['users_parquet'][PATH_SET])
+# users_df = users_df.withColumn(
+#     '_UserId',
+#     F.col('_Id')
+# ).drop('_Id')
 
-questions_users_df = questions_df.join(
-    users_df,
-    on=questions_df._OwnerUserId == users_df._UserId,
-    how='left_outer'
-)
-questions_users_df = questions_users_df.selectExpr(
-    '_PostId',
-    '_AcceptedAnswerId',
-    '_Body',
-    '_Tags',
-    '_AnswerCount',
-    '_CommentCount',
-    '_FavoriteCount',
-    '_OwnerUserId',
-    '_OwnerDisplayName',
-    '_Score',
-    '_ViewCount',
-    '_AboutMe AS _UserAboutMe',
-    '_AccountId',
-    '_UserId',
-    '_DisplayName AS _UserDisplayName',
-    '_DownVotes AS _UserDownVotes',
-    '_Location AS _UserLocation',
-    '_ProfileImageUrl',
-    '_Reputation AS _UserReputation',
-    '_UpVotes AS _UserUpVotes',
-    '_Views AS _UserViews',
-    '_WebsiteUrl AS _UserWebsiteUrl',
-)
-questions_users_df.write.mode('overwrite').parquet(PATHS['questions_users'][PATH_SET])
+# questions_users_df = questions_df.join(
+#     users_df,
+#     on=questions_df._OwnerUserId == users_df._UserId,
+#     how='left_outer'
+# )
+# questions_users_df = questions_users_df.selectExpr(
+#     '_PostId',
+#     '_AcceptedAnswerId',
+#     '_Body',
+#     '_Tags',
+#     '_AnswerCount',
+#     '_CommentCount',
+#     '_FavoriteCount',
+#     '_OwnerUserId',
+#     '_OwnerDisplayName',
+#     '_Score',
+#     '_ViewCount',
+#     '_AboutMe AS _UserAboutMe',
+#     '_AccountId',
+#     '_UserId',
+#     '_DisplayName AS _UserDisplayName',
+#     '_DownVotes AS _UserDownVotes',
+#     '_Location AS _UserLocation',
+#     '_ProfileImageUrl',
+#     '_Reputation AS _UserReputation',
+#     '_UpVotes AS _UserUpVotes',
+#     '_Views AS _UserViews',
+#     '_WebsiteUrl AS _UserWebsiteUrl',
+# )
+# questions_users_df.write.mode('overwrite').parquet(PATHS['questions_users'][PATH_SET])
 questions_users_df = spark.read.parquet(PATHS['questions_users'][PATH_SET])
-questions_users_df.show()
+if DEBUG is True:
+    questions_users_df.show()
 
 # Count the number of each tag
 all_tags = questions_users_df.rdd.flatMap(lambda x: re.sub('[<>]', ' ', x['_Tags']).split())
@@ -268,145 +274,170 @@ questions_tags_df.write.mode('overwrite').parquet(PATHS['questions_tags'][PATH_S
 questions_tags_df = spark.read.parquet(PATHS['questions_tags'][PATH_SET].format(TAG_LIMIT))
 questions_tags_df.show()
 
-# One hot encode the data using one_hot_encode()
-def one_hot_record(x, enumerated_labels, index_tag):
-    d = x.asDict()
-    d['_Tags'] = one_hot_encode(
-        d['_Tags'],
-        enumerated_labels,
-        index_tag
-    )
-    return Row(**d)
+# # Emit one record per tag
+# def emit_tag_records(x, tag_index):
+#     d = x.asDict()
 
-one_hot_questions = questions_tags_df.rdd.map(lambda x: one_hot_record(x, enumerated_labels, index_tag))
+#     for tag in d['_Tags']:
 
-# Create a DataFrame out of the one-hot encoded RDD
-one_hot_schema = T.StructType([
-    T.StructField('_PostId', T.IntegerType(), True),
-    T.StructField('_AcceptedAnswerId', T.IntegerType(), True),
-    T.StructField('_Body', T.StringType(), True),
-    T.StructField('_Code', T.StringType(), True),
-    T.StructField(
-        "_Tags",
-        T.ArrayType(
-            T.IntegerType()
-        )
-    ),
-    T.StructField('_AnswerCount', T.IntegerType(), True),
-    T.StructField('_CommentCount', T.IntegerType(), True),
-    T.StructField('_FavoriteCount', T.IntegerType(), True),
-    T.StructField('_OwnerUserId', T.IntegerType(), True),
-    T.StructField('_OwnerDisplayName', T.StringType(), True),
-    T.StructField('_Score', T.IntegerType(), True),
-    T.StructField('_ViewCount', T.IntegerType(), True),
-    T.StructField('_UserAboutMe', T.StringType(), True),
-    T.StructField('_AccountId',T.IntegerType(), True),
-    T.StructField('_UserId', T.IntegerType(), True),
-    T.StructField('_UserDisplayName', T.StringType(),True),
-    T.StructField('_UserDownVotes', T.IntegerType(), True),
-    T.StructField('_UserLocation', T.StringType(), True),
-    T.StructField('_ProfileImageUrl', T.StringType(), True),
-    T.StructField('_UserReputation', T.IntegerType() ,True),
-    T.StructField('_UserUpVotes', T.IntegerType(), True),
-    T.StructField('_UserViews', T.IntegerType(), True),
-    T.StructField('_UserWebsiteUrl', T.StringType(), True),
-])
-one_hot_df = spark.createDataFrame(
-    one_hot_questions,
-    one_hot_schema
-)
-one_hot_df.write.mode('overwrite').parquet(
-    PATHS['one_hot'][PATH_SET].format(TAG_LIMIT)
-)
+#         n = d.copy()
+#         n['_LabelIndex'] = tag_index[tag]
+#         n['_LabelString'] = tag
+#         n['_LabelValue'] = 1
+#         del n['_Tags']
 
-one_hot_df = spark.read.parquet(
-    PATHS['one_hot'][PATH_SET].format(TAG_LIMIT)
-)
-spark.catalog.createExternalTable(
-    PATHS['one_hot'][PATH_SET].format(TAG_LIMIT)
-)
+#         yield(Row(**n))
+
+# per_tag_questions = questions_tags_df.rdd.flatMap(lambda x: emit_tag_records(x, tag_index))
+
+# # Create a DataFrame out of the one-hot encoded RDD
+# per_tag_schema = T.StructType([
+#     T.StructField('_PostId', T.IntegerType(), True),
+#     T.StructField('_AcceptedAnswerId', T.IntegerType(), True),
+#     T.StructField('_Body', T.StringType(), True),
+#     T.StructField('_Code', T.StringType(), True),
+#     T.StructField('_LabelIndex', T.IntegerType(), True),
+#     T.StructField('_LabelString', T.StringType(), True),
+#     T.StructField('_LabelValue', T.IntegerType(), True),
+#     T.StructField('_AnswerCount', T.IntegerType(), True),
+#     T.StructField('_CommentCount', T.IntegerType(), True),
+#     T.StructField('_FavoriteCount', T.IntegerType(), True),
+#     T.StructField('_OwnerUserId', T.IntegerType(), True),
+#     T.StructField('_OwnerDisplayName', T.StringType(), True),
+#     T.StructField('_Score', T.IntegerType(), True),
+#     T.StructField('_ViewCount', T.IntegerType(), True),
+#     T.StructField('_UserAboutMe', T.StringType(), True),
+#     T.StructField('_AccountId',T.IntegerType(), True),
+#     T.StructField('_UserId', T.IntegerType(), True),
+#     T.StructField('_UserDisplayName', T.StringType(),True),
+#     T.StructField('_UserDownVotes', T.IntegerType(), True),
+#     T.StructField('_UserLocation', T.StringType(), True),
+#     T.StructField('_ProfileImageUrl', T.StringType(), True),
+#     T.StructField('_UserReputation', T.IntegerType() ,True),
+#     T.StructField('_UserUpVotes', T.IntegerType(), True),
+#     T.StructField('_UserViews', T.IntegerType(), True),
+#     T.StructField('_UserWebsiteUrl', T.StringType(), True),
+# ])
+
+# per_tag_df = spark.createDataFrame(
+#     per_tag_questions,
+#     per_tag_schema
+# )
+
+# # Save as Parquet format, partitioned by the label index
+# per_tag_df.write.mode('overwrite').parquet(
+#     PATHS['per_tag'][PATH_SET].format(TAG_LIMIT),
+#     partitionBy=['_LabelIndex']
+# )
+
+# per_tag_df = spark.read.parquet(
+#     PATHS['per_tag'][PATH_SET].format(TAG_LIMIT)
+# )
+# per_tag_df.registerTempTable('per_tag')
+
+# # #
+# # # 1) Use GROUP BY to get sample ratios
+# # #
+# # from datetime import datetime
+
+# # # Get the counts for tags all at once
+# # total_records_df = spark.sql('SELECT COUNT(*) AS total FROM per_tag')
+# # total_records = total_records_df.first().total
+
+# # query = f"""
+# #     SELECT 
+# #         _LabelIndex,
+# #         COUNT(*) AS total,
+# #         COUNT(*)/{total_records} AS sample_ratio
+# #     FROM per_tag 
+# #     GROUP BY _LabelIndex
+# # """
+# # sample_ratios_df = spark.sql(query)
+# # sample_ratios_df.write.mode('overwrite').parquet(
+# #     PATHS['sample_ratios'][PATH_SET].format(TAG_LIMIT)
+# # )
+# # sample_ratios = sample_ratios_df.rdd.map(lambda x: x.asDict()).collect()
+# # sample_ratios_d = {x['_LabelIndex'] : x for x in sample_ratios}
+
+# start = datetime.now()
+
+# def sample_group(x, sample_ratios_d):
+#     sample_n = 50
+#     rs = random.Random()
+#     yield rs.sample(list(x), sample_n)
 
 
-# # Write out a stratify_limit sized stratified sample for each tag
-# for i in range(0, 10):#tag_total):
-#     print(f'\n\nProcessing tag {i:,} of {tag_total:,} total tags\n\n')
+# groupable = stratified_down_sample = per_tag_df.rdd \
+#     .map(lambda x: (x._LabelIndex, x))
+
+# grouped = groupable.groupByKey()
+
+# .flatMap(
+#         lambda x: sample_group(x[1] if len(x) > 0 else [], sample_ratios_d)
+#     ) \
+#     .flatMapValues(lambda x: x[1])
+
+# stratified_df = spark.createDataFrame(
+#     stratified_down_sample,
+#     per_tag_schema
+# )
+# stratified_df.write.mode('overwrite').parquet(
+#     PATHS['sample'][PATH_SET].format(TAG_LIMIT),
+#     partitionBy=['_LabelIndex']
+# )
+
+# end = datetime.now()
+# speed = end - start
+# print(speed)
+
+# # diff = speed_3 - speed_2
+# # print(diff)
+
+
+# # # Write out a stratify_limit sized stratified sample for each tag
+# # for i in range(0, 10):#tag_total):
+# #     print(f'\n\nProcessing tag {i:,} of {tag_total:,} total tags\n\n')
     
-#     one_label_df = one_hot_df.rdd.map(
-#         lambda x: Row(
-#             _Body=x._Body, 
-#             _Code=x._Code,
-#             _Label=x._Tags[i]
-#         )
-#     ).toDF()
+# #     one_label_df = one_hot_df.rdd.map(
+# #         lambda x: Row(
+# #             _Body=x._Body, 
+# #             _Code=x._Code,
+# #             _Label=x._Tags[i]
+# #         )
+# #     ).toDF()
 
-#     one_label_df = one_hot_df.select(
-#         '_Body',
-#         '_Code',
-#         one_hot_df['_Tags'].getItem(i).alias('_Label')
-#     )
+# #     one_label_df = one_hot_df.select(
+# #         '_Body',
+# #         '_Code',
+# #         one_hot_df['_Tags'].getItem(i).alias('_Label')
+# #     )
 
-#     # Select records with a positive value for this tag
-#     positive_examples = one_label_df.filter(one_label_df._Label == 1)
-#     negative_examples = one_label_df.filter(one_label_df._Label == 0)
+# #     # Select records with a positive value for this tag
+# #     positive_examples = one_label_df.filter(one_label_df._Label == 1)
+# #     negative_examples = one_label_df.filter(one_label_df._Label == 0)
     
-#     # Sample the positive examples to equal the stratify limit
-#     positive_count = positive_examples.count()
-#     ratio = min(1.0, SAMPLE_LIMIT / positive_count)
-#     sample_ratio = max(0.0, ratio)
-#     positive_examples_sample = positive_examples.sample(False, sample_ratio, seed=1337)
+# #     # Sample the positive examples to equal the stratify limit
+# #     positive_count = positive_examples.count()
+# #     ratio = min(1.0, SAMPLE_LIMIT / positive_count)
+# #     sample_ratio = max(0.0, ratio)
+# #     positive_examples_sample = positive_examples.sample(False, sample_ratio, seed=1337)
 
-#     # Now get an equal number of negative examples
-#     positive_count = positive_examples_sample.count()
-#     negative_count = negative_examples.count()
-#     ratio = min(1.0, positive_count / negative_count)
-#     sample_ratio = max(0.0, ratio)
-#     negative_examples_sample = negative_examples.sample(False, sample_ratio, seed=1337)
+# #     # Now get an equal number of negative examples
+# #     positive_count = positive_examples_sample.count()
+# #     negative_count = negative_examples.count()
+# #     ratio = min(1.0, positive_count / negative_count)
+# #     sample_ratio = max(0.0, ratio)
+# #     negative_examples_sample = negative_examples.sample(False, sample_ratio, seed=1337)
 
-#     final_examples_df = positive_examples_sample.union(negative_examples_sample)
+# #     final_examples_df = positive_examples_sample.union(negative_examples_sample)
 
-#     if DEBUG is True:
-#         final_examples_df.show()
+# #     if DEBUG is True:
+# #         final_examples_df.show()
 
-#     # Write the record out as JSON under a directory we will then read in its enrirety
-#     final_examples_df.write.mode('overwrite').json(PATHS['output_jsonl'][PATH_SET].format(TAG_LIMIT, i))
+# #     # Write the record out as JSON under a directory we will then read in its enrirety
+# #     final_examples_df.write.mode('overwrite').json(PATHS['output_jsonl'][PATH_SET].format(TAG_LIMIT, i))
 
-#     # Free RAM explicitly each loop
-#     del final_examples_df
-#     gc.collect()
+# #     # Free RAM explicitly each loop
+# #     del final_examples_df
+# #     gc.collect()
 
-
-#
-# 1) Use GROUP BY to get counts
-#
-one_hot_df.registerTempTable("one_hot")
-
-
-from datetime import datetime
-
-# Get the counts for tags all at once
-total_records_df = spark.sql("SELECT COUNT(*) AS total FROM one_hot")
-total_records = total_records_df.first().total
-
-start = datetime.now()
-query = str()
-for i in range(1, tag_total + 1):
-    query += f"""
-        SELECT 
-            '{i}' AS _Index,
-            element_at(_Tags, {i}) AS value,
-            COUNT(*) AS total,
-            COUNT(*)/{total_records} AS ratio 
-        FROM one_hot 
-        GROUP BY element_at(_Tags, {i})
-        UNION
-    """
-query = query[:-11]
-
-sample_ratios_df = spark.sql(query).show()
-
-end = datetime.now()
-speed = end - start
-print(speed)
-
-# diff = speed_3 - speed_2
-# print(diff)
