@@ -101,82 +101,82 @@ sc = spark.sparkContext
 #
 # Get answered questions and not their answers
 #
-# posts = spark.read.parquet(PATHS['posts'][PATH_SET])
-# if DEBUG is True:
-#     print('Total posts count: {:,}'.format(
-#         posts.count()
-#     ))
-# questions = posts.filter(posts._ParentId.isNull())\
-#                  .filter(posts._AnswerCount > 0)\
-#                  .filter(posts._Score > 1)
-# if DEBUG is True:
-#     print('Total questions count: {:,}'.format(questions.count()))
+posts = spark.read.parquet(PATHS['posts'][PATH_SET])
+if DEBUG is True:
+    print('Total posts count: {:,}'.format(
+        posts.count()
+    ))
+questions = posts.filter(posts._ParentId.isNull())\
+                 .filter(posts._AnswerCount > 0)\
+                 .filter(posts._Score > 1)
+if DEBUG is True:
+    print('Total questions count: {:,}'.format(questions.count()))
 
-# # Combine title with body
-# questions = questions.select(
-#     F.col('_Id').alias('_PostId'),
-#     '_AcceptedAnswerId',
-#     F.concat(
-#         F.col("_Title"),
-#         F.lit(" "),
-#         F.col("_Body")
-#     ).alias('_Body'),
-#     '_Tags',
-#     '_AnswerCount',
-#     '_CommentCount',
-#     '_FavoriteCount',
-#     '_OwnerUserId',
-#     '_OwnerDisplayName',
-#     '_Score',
-#     '_ViewCount',
-# )
-# questions.show()
+# Combine title with body
+questions = questions.select(
+    F.col('_Id').alias('_PostId'),
+    '_AcceptedAnswerId',
+    F.concat(
+        F.col("_Title"),
+        F.lit(" "),
+        F.col("_Body")
+    ).alias('_Body'),
+    '_Tags',
+    '_AnswerCount',
+    '_CommentCount',
+    '_FavoriteCount',
+    '_OwnerUserId',
+    '_OwnerDisplayName',
+    '_Score',
+    '_ViewCount',
+)
+questions.show()
 
-# # Write all questions to a Parquet file, then trim fields
-# questions\
-#     .write.mode('overwrite')\
-#     .parquet(PATHS['questions'][PATH_SET])
-# questions_df = spark.read.parquet(PATHS['questions'][PATH_SET])
+# Write all questions to a Parquet file, then trim fields
+questions\
+    .write.mode('overwrite')\
+    .parquet(PATHS['questions'][PATH_SET])
+questions_df = spark.read.parquet(PATHS['questions'][PATH_SET])
 
-# #
-# # Join User records from ch02/xml_to_parquet.py
-# #
-# users_df = spark.read.parquet(PATHS['users_parquet'][PATH_SET])
-# users_df = users_df.withColumn(
-#     '_UserId',
-#     F.col('_Id')
-# ).drop('_Id')
+#
+# Join User records from ch02/xml_to_parquet.py
+#
+users_df = spark.read.parquet(PATHS['users_parquet'][PATH_SET])
+users_df = users_df.withColumn(
+    '_UserId',
+    F.col('_Id')
+).drop('_Id')
 
-# questions_users_df = questions_df.join(
-#     users_df,
-#     on=questions_df._OwnerUserId == users_df._UserId,
-#     how='left_outer'
-# )
-# questions_users_df = questions_users_df.selectExpr(
-#     '_PostId',
-#     '_AcceptedAnswerId',
-#     '_Body',
-#     '_Tags',
-#     '_AnswerCount',
-#     '_CommentCount',
-#     '_FavoriteCount',
-#     '_OwnerUserId',
-#     '_OwnerDisplayName',
-#     '_Score',
-#     '_ViewCount',
-#     '_AboutMe AS _UserAboutMe',
-#     '_AccountId',
-#     '_UserId',
-#     '_DisplayName AS _UserDisplayName',
-#     '_DownVotes AS _UserDownVotes',
-#     '_Location AS _UserLocation',
-#     '_ProfileImageUrl',
-#     '_Reputation AS _UserReputation',
-#     '_UpVotes AS _UserUpVotes',
-#     '_Views AS _UserViews',
-#     '_WebsiteUrl AS _UserWebsiteUrl',
-# )
-# questions_users_df.write.mode('overwrite').parquet(PATHS['questions_users'][PATH_SET])
+questions_users_df = questions_df.join(
+    users_df,
+    on=questions_df._OwnerUserId == users_df._UserId,
+    how='left_outer'
+)
+questions_users_df = questions_users_df.selectExpr(
+    '_PostId',
+    '_AcceptedAnswerId',
+    '_Body',
+    '_Tags',
+    '_AnswerCount',
+    '_CommentCount',
+    '_FavoriteCount',
+    '_OwnerUserId',
+    '_OwnerDisplayName',
+    '_Score',
+    '_ViewCount',
+    '_AboutMe AS _UserAboutMe',
+    '_AccountId',
+    '_UserId',
+    '_DisplayName AS _UserDisplayName',
+    '_DownVotes AS _UserDownVotes',
+    '_Location AS _UserLocation',
+    '_ProfileImageUrl',
+    '_Reputation AS _UserReputation',
+    '_UpVotes AS _UserUpVotes',
+    '_Views AS _UserViews',
+    '_WebsiteUrl AS _UserWebsiteUrl',
+)
+questions_users_df.write.mode('overwrite').parquet(PATHS['questions_users'][PATH_SET])
 questions_users_df = spark.read.parquet(PATHS['questions_users'][PATH_SET])
 if DEBUG is True:
     questions_users_df.show()
