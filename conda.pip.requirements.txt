@@ -1,0 +1,6 @@
+cupy-cuda100
+torch
+wandb
+pip-tools
+-e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
+

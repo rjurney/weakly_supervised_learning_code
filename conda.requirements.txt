@@ -1,0 +1,28 @@
+beautifulsoup4
+boto3
+# bert-for-tf2
+dask
+dill
+# fast-bert
+frozendict
+gensim
+gpustat
+#guesslang
+ipython
+iso8601
+jupyter
+lxml
+nltk
+numpy>=1.16.0
+pandas
+pyarrow==0.14.1
+pyspark
+requests
+s3fs
+seaborn
+scikit-learn
+spacy[cuda100]==2.2.2
+tensorflow-gpu==2.0.0
+tensorflow-hub
+textblob
+texttable
