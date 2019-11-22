@@ -1,13 +1,15 @@
 beautifulsoup4
 boto3
 # bert-for-tf2
-# cupy-cuda100
+cupy-cuda100
+dask
+dask-ml
 dill
 # fast-bert
 frozendict
 gensim
 gpustat
-guesslang
+# guesslang
 ipython
 iso8601
 jupyter
@@ -26,9 +28,8 @@ scikit-learn
 # -e git+git://github.com/slundberg/shap@master#egg=shap
 # snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
 -e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
-spacy[cuda100]
-# tensorflow-gpu==2.0.0
-tensorflow==2.0.0
+spacy[cuda100]==2.2.2
+tensorflow-gpu==2.0.0
 tensorflow-hub
 textblob
 texttable

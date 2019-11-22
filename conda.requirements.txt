@@ -1,5 +1,6 @@
 beautifulsoup4
 boto3
+cython
 # bert-for-tf2
 dask
 dill
@@ -7,7 +8,7 @@ dill
 frozendict
 gensim
 gpustat
-#guesslang
+# guesslang
 ipython
 iso8601
 jupyter
