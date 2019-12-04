@@ -27,3 +27,5 @@ tensorflow-gpu==2.0.0
 tensorflow-hub
 textblob
 texttable
+tqdm
+
