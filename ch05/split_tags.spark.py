@@ -225,6 +225,7 @@ def tag_list_record(x, valid_tags):
     d['_Body'] = body
     d['_Code'] = code
     d['_Tags'] = valid_tags
+    d['_Label'] = 0
     
     return Row(**d)
 
@@ -245,6 +246,7 @@ tag_list_schema = T.StructType([
             T.StringType()
         )
     ),
+    T.StructField('_Label', T.IntegerType(), True),
     T.StructField('_AnswerCount', T.IntegerType(), True),
     T.StructField('_CommentCount', T.IntegerType(), True),
     T.StructField('_FavoriteCount', T.IntegerType(), True),
