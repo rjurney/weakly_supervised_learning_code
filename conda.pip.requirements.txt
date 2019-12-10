@@ -1,6 +1,6 @@
 cupy-cuda100
-torch
-wandb
 pip-tools
 -e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
 spacy[cuda100] @ git+git://github.com/mmaybeno/spaCy@agnostic-vocab-array-fix#egg=snorkel[cuda100]
+torch
+wandb
