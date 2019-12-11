@@ -32,6 +32,7 @@ spacy[cuda100]==2.2.2
 tensorflow-gpu==2.0.0
 tensorflow-hub
 textblob
+textdistance
 texttable
 torch
 wandb
