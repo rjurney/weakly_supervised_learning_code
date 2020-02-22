@@ -18,7 +18,7 @@ nltk
 numpy>=1.16.0
 pandas
 pip-tools
-pyarrow>=0.16.1
+pyarrow>=0.16.0
 pyspark
 requests
 s3fs
