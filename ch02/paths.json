@@ -1,0 +1,59 @@
+{
+    "s3_bucket": "stackoverflow-events",
+    "posts": {
+        "local": "data/stackoverflow/Posts.df.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Posts.df.parquet",
+    },
+    "questions": {
+        "local": "data/stackoverflow/Questions.Answered.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Answered.parquet",
+    },
+    "tag_counts": {
+        "local": "data/stackoverflow/Questions.TagCounts.{}.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.TagCounts.{}.parquet",
+    },
+    "questions_tags": {
+        "local": "data/stackoverflow/Questions.Tags.{}.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Tags.{}.parquet",
+    },
+    "one_hot": {
+        "local": "data/stackoverflow/Questions.Stratified.{}.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.parquet",
+    },
+    "output_jsonl": {
+        "local": "data/stackoverflow/Questions.Stratified.{}.{}.jsonl",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.{}.jsonl",
+    },
+    "tag_index": {
+        "local": "data/stackoverflow/tag_index.{}.json",
+        "s3": "08-05-2019/tag_index.{}.json",
+    },
+    "index_tag": {
+        "local": "data/stackoverflow/index_tag.{}.json",
+        "s3": "08-05-2019/index_tag.{}.json",
+    },
+    "sorted_all_tags": {
+        "local": "data/stackoverflow/sorted_all_tags.{}.json",
+        "s3": "08-05-2019/sorted_all_tags.{}.json",
+    },
+    "stratified_sample": {
+        "local": "data/stackoverflow/Questions.Stratified.{}.*.jsonl",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.*.jsonl",
+    },
+    "label_counts": {
+        "local": "data/stackoverflow/label_counts.{}.json",
+        "s3": "08-05-2019/label_counts.{}.json",
+    },
+    "questions_final": {
+        "local": "data/stackoverflow/Questions.Stratified.Final.{}.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Stratified.Final.{}.parquet"
+    },
+    "report": {
+        "local": "data/stackoverflow/final_report.{}.json",
+        "s3": "08-05-2019/final_report.{}.json",
+    },
+    "bad_questions": {
+        "local": "data/stackoverflow/Questions.Bad.{}.{}.parquet",
+        "s3": "s3://stackoverflow-events/08-05-2019/Questions.Bad.{}.{}.parquet",
+    }
+}
