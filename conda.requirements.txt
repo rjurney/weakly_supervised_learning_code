@@ -23,7 +23,7 @@ s3fs
 seaborn
 scikit-learn
 spacy[cuda100]==2.2.2
-tensorflow-gpu==2.0.0
+tensorflow-gpu==2.1.0
 tensorflow-hub
 textblob
 textdistance
