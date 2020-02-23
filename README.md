@@ -6,7 +6,7 @@ In my previous book, [Agile Data Science 2.0](http://shop.oreilly.com/product/06
 
 ## Software Prerequisites
 
-* Linux, Mac OS X or Windows
+* Linux, Mac OS X or Windows - any OS with a Docker implementation
 * [Git](https://git-scm.com/download) is used to check out the book’s source code
 * [Docker](https://www.docker.com/get-started) is used to run the book’s examples in the same environment I wrote them in
 
