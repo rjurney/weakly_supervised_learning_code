@@ -17,7 +17,7 @@ PATH_SET = 's3' # 'local'
 
 # Load the many paths from a JSON file
 PATHS = json.load(
-    open('ch02/paths.json')
+    open('paths.json')
 )
 
 # Spark-XML DataFrame method

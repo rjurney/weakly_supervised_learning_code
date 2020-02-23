@@ -13,6 +13,7 @@ import re
 import boto3
 from pyspark.sql import SparkSession, Row
 import pyspark.sql.functions as F
+from pyspark.sql.functions import udf
 import pyspark.sql.types as T
 
 from lib.utils import (
@@ -30,65 +31,10 @@ REPORT = True
 # Define a set of paths for each step for local and S3
 PATH_SET = 'local' # 's3'
 
-PATHS = {
-    's3_bucket': 'stackoverflow-events',
-    'posts': {
-        'local': 'data/stackoverflow/Posts.df.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Posts.df.parquet',
-    },
-    'questions': {
-        'local': 'data/stackoverflow/Questions.Answered.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Answered.parquet',
-    },
-    'tag_counts': {
-        'local': 'data/stackoverflow/Questions.TagCounts.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.TagCounts.{}.parquet',
-    },
-    'questions_tags': {
-        'local': 'data/stackoverflow/Questions.Tags.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Tags.{}.parquet',
-    },
-    'one_hot': {
-        'local': 'data/stackoverflow/Questions.Stratified.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.parquet',
-    },
-    'output_jsonl': {
-        'local': 'data/stackoverflow/Questions.Stratified.{}.{}.jsonl',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.{}.jsonl',
-    },
-    'tag_index': {
-        'local': 'data/stackoverflow/tag_index.{}.json',
-        's3': '08-05-2019/tag_index.{}.json',
-    },
-    'index_tag': {
-        'local': 'data/stackoverflow/index_tag.{}.json',
-        's3': '08-05-2019/index_tag.{}.json',
-    },
-    'sorted_all_tags': {
-        'local': 'data/stackoverflow/sorted_all_tags.{}.json',
-        's3': '08-05-2019/sorted_all_tags.{}.json',
-    },
-    'stratified_sample': {
-        'local': 'data/stackoverflow/Questions.Stratified.{}.*.jsonl',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.{}.*.jsonl',
-    },
-    'label_counts': {
-        'local': 'data/stackoverflow/label_counts.{}.json',
-        's3': '08-05-2019/label_counts.{}.json',
-    },
-    'questions_final': {
-        'local': 'data/stackoverflow/Questions.Stratified.Final.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Stratified.Final.{}.parquet'
-    },
-    'report': {
-        'local': 'data/stackoverflow/final_report.{}.json',
-        's3': '08-05-2019/final_report.{}.json',
-    },
-    'bad_questions': {
-        'local': 'data/stackoverflow/Questions.Bad.{}.{}.parquet',
-        's3': 's3://stackoverflow-events/08-05-2019/Questions.Bad.{}.{}.parquet',
-    }
-}
+# Load the many paths from a JSON file
+PATHS = json.load(
+    open('paths.json')
+)
 
 
 #
@@ -96,8 +42,6 @@ PATHS = {
 #
 spark = SparkSession.builder\
     .appName('Weakly Supervised Learning - Extract Questions')\
-    .config('spark.dynamicAllocation.enabled', True)\
-    .config('spark.shuffle.service.enabled', True)\
     .getOrCreate()
 sc = spark.sparkContext
 
@@ -117,14 +61,27 @@ if DEBUG is True:
     print('Total questions count: {:,}'.format(questions.count()))
 
 # Combine title with body
-questions = questions.select(
+questions = questions.withColumn(
+    'Title_Body',
     F.concat(
-        F.col("_Title"),
+        F.col("Title"),
         F.lit(" "),
-        F.col("_Body")
-    ).alias('_Body'),
-    '_Tags'
+        F.col("Body")
+    ),
 )
+
+# Split the tags and replace the Tags column
+@udf(T.ArrayType(T.StringType()))
+def split_tags(x):
+    return re.sub('[<>]', ' ', x['_Tags']).split()
+
+questions = questions.withColumn(
+    'Tags',
+    split_tags(
+        F.col('Tags')
+    )
+)
+
 questions.show()
 
 # Write all questions to a Parquet file, then trim fields
