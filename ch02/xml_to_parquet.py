@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+
 #
 # Convert the Stack Overflow data from XML format to Parquet format for performance reasons.
 # Run me with: PYSPARK_PYTHON=python3 PYSPARK_DRIVER_PYTHON=ipython3 pyspark/spark-submit --packages com.databricks:spark-xml_2.11:0.7.0
 #
+
+import json
 
 from pyspark.sql import SparkSession
 
@@ -10,36 +14,22 @@ spark = SparkSession.builder.appName('Weakly Supervised Learning - Convert XML t
 sc = spark.sparkContext
 
 PATH_SET = 's3' # 'local'
-PATHS = {
-        'posts': {
-                'local': 'data/stackoverflow/Posts.xml.bz2',
-                's3': 's3://stackoverflow-events/08-05-2019/Posts.xml.bz2',
-        },
-        'posts_parquet': {
-                'local': 'data/stackoverflow/Posts.df.parquet',
-                's3': 's3://stackoverflow-events/08-05-2019/Posts.df.parquet',
-        },
-        'users': {
-                'local': 'data/stackoverflow/Users.xml.bz2',
-                's3': 's3://stackoverflow-events/08-05-2019/Users.xml.bz2',
-        },
-        'users_parquet': {
-                'local': 'data/stackoverflow/Users.df.parquet',
-                's3': 's3://stackoverflow-events/08-05-2019/Users.df.parquet',
-        }
-}
 
+# Load the many paths from a JSON file
+PATHS = json.load(
+    open('ch02/paths.json')
+)
 
 # Spark-XML DataFrame method
 posts_df = spark.read.format('xml').options(rowTag='row').options(rootTag='posts')\
-                .load(PATHS['posts'][PATH_SET])
+                .load(PATHS['posts_xml'][PATH_SET])
 posts_df.write.mode('overwrite')\
-        .parquet(PATHS['posts_parquet'][PATH_SET])
+        .parquet(PATHS['posts'][PATH_SET])
 
 users_df = spark.read.format('xml').options(rowTag='row').options(rootTag='users')\
-                .load(PATHS['users'][PATH_SET])
+                .load(PATHS['users_xml'][PATH_SET])
 users_df.write.mode('overwrite')\
-        .parquet(PATHS['users_parquet'][PATH_SET])
+        .parquet(PATHS['users'][PATH_SET])
 
 # tags_df = spark.read.format('xml').options(rowTag='row').options(rootTag='tags')\
 #                .load('s3://stackoverflow-events/06-24-2019/Tags.xml.lzo')
