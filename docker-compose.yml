@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+    jupyter:
+        build: .
+        image: weakly_supervised_learning
+        container_name: weakly_supervised_learning
+        labels:
+            description: Weakly Supervised Learning (O'Reilly, 2020) by Russell Jurney
+            name: weakly_supervised_learning
+        volumes:
+            - ".:/weakly_supervised_learning"
+        ports:
+            - "8888:8888"
