@@ -22,7 +22,7 @@ sudo python3 -m spacy download en_core_web_lg
 
 # Set ipython as the default shell for pyspark
 export PYSPARK_DRIVER_PYTHON=ipython3
-echo "" >> ~/.bash_profile
-echo "# Set ipython as the default shell for pyspark" >> ~/.bash_profile
-echo "export PYSPARK_DRIVER_PYTHON=ipython3" >> ~/.bash_profile
-echo "" >> ~/.bash_profile
+echo "" >> /home/hadoop/.bash_profile
+echo "# Set ipython as the default shell for pyspark" >> /home/hadoop/.bash_profile
+echo "export PYSPARK_DRIVER_PYTHON=ipython3" >> /home/hadoop/.bash_profile
+echo "" >> /home/hadoop/.bash_profile
