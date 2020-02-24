@@ -38,15 +38,15 @@
     },
     "comments": {
         "local": "data/stackoverflow/Comments.df.parquet",
-        "s3": "s3://stackoverflow-events/Commants.df.parquet"
+        "s3": "s3://stackoverflow-events/2019-12-02/Comments.df.parquet"
     },
     "postlinks_xml": {
         "local": "data/stackoverflow/PostLinks.xml.bz2",
-        "s3": "s3://stackoverflow-events/PostLinks.xml.bz2"
+        "s3": "s3://stackoverflow-events/2019-12-02/PostLinks.xml.bz2"
     },
     "postlinks": {
         "local": "data/stackoverflow/PostLinks.df.parquet",
-        "s3": "s3://stackoverflow-events/PostLinks.df.parquet"
+        "s3": "s3://stackoverflow-events/2019-12-02/PostLinks.df.parquet"
     },
     "questions": {
         "local": "data/stackoverflow/Questions.Answered.parquet",
