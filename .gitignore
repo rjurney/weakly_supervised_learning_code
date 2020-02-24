@@ -8,3 +8,4 @@ nohup.out
 models
 simple_log.jsonl
 __pycache__
+src
