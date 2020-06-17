@@ -2,16 +2,16 @@
 
 import re
 
-from bs4 import BeautifulSoup
 import nltk
-from nltk.tokenize import RegexpTokenizer
-from nltk.corpus import stopwords
 import numpy as np
-
-from pyspark.sql import Row
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
+from bs4 import BeautifulSoup
+from nltk.corpus import stopwords
+from nltk.tokenize import RegexpTokenizer
+from nltk.tokenize.punkt import PunktSentenceTokenizer
+from pyspark.sql import Row
 
 
 # In order to tokenize questions and remove stopwords
@@ -90,6 +90,21 @@ def extract_code_plain(x):
     codes = doc.find_all('code')
     text = '\n'.join([c.text for c in codes])
     return text
+
+
+def extract_bert_format(x):
+    """Extract text in BERT format"""
+
+    # Parse the sentences from the document
+    sentence_tokenizer = PunktSentenceTokenizer()
+    sentences = sentence_tokenizer.tokenize(x)
+
+    # Write each sentence exactly as it appared to one line each
+    for sentence in sentences:
+        yield(sentence.encode('unicode-escape').decode().replace('\\\\', '\\'))
+
+    # Add the final document separator
+    yield('')
 
 
 def one_hot_encode(tag_list, enumerated_labels, index_tag):
