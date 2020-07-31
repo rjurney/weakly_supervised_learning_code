@@ -14,6 +14,7 @@ ipython
 iso8601
 jupyter
 lxml
+munkres
 nltk
 numpy>=1.16.0
 pandas
