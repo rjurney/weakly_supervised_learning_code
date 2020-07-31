@@ -12,6 +12,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from pyspark.sql import Row
+from snorkel.analysis import get_label_buckets
 
 
 # In order to tokenize questions and remove stopwords
@@ -143,3 +144,50 @@ def create_label_row_columns(x):
     args['_Code'] = x._Code
     return Row(**args)
 
+
+def get_mistakes(df, probs_test, buckets, labels, label_names):
+    """Take DataFrame and pair of actual/predicted labels/names and return a DataFrame showing those records."""
+    df_fn = df.iloc[buckets[labels]]
+    df_fn['probability'] = probs_test[buckets[labels], 1]
+    df_fn['true label'] = label_names[0]
+    df_fn['predicted label'] = label_names[1]
+    return df_fn
+
+
+def mistakes_df(df, label_model, L_test, y_test):
+    """Compute a DataFrame of all the mistakes we've seen."""
+    out_dfs = []
+
+    probs_test = label_model.predict_proba(L=L_test)
+    preds_test = probs_test >= 0.5
+
+    buckets = get_label_buckets(
+        y_test,
+        L_test[:, 1]
+    )
+    print(buckets)
+
+    for (actual, predicted) in buckets.keys():
+    
+        # Only shot mistakes that we actually voted on
+        if actual != predicted:
+
+            actual_name    = number_to_name_dict[actual]
+            predicted_name = number_to_name_dict[predicted]
+
+            out_dfs.append(
+                get_mistakes(
+                    df,
+                    probs_test,
+                    buckets=buckets,
+                    labels=(actual, predicted),
+                    label_names=(actual_name, predicted_name)
+                )
+            )
+
+    if len(out_dfs) > 1:    
+        return out_dfs[0].append(
+            out_dfs[1:]
+        )
+    else:
+        return out_dfs[0]
