@@ -1,11 +1,9 @@
 beautifulsoup4
 boto3
-# bert-for-tf2
 cupy-cuda100
 dask
 dask-ml
 dill
-# fast-bert
 frozendict
 gensim
 gpustat
@@ -26,12 +24,9 @@ s3fs
 seaborn
 # sentencepiece # Use Github and build/install https://github.com/google/sentencepiece
 scikit-learn
-# -e git+git://github.com/slundberg/shap@master#egg=shap
-# snorkel==0.9.1 # Can't include until it upgrades to torch 1.2
--e git+git://github.com/snorkel-team/snorkel@master#egg=snorkel
+shap
+snorkel
 spacy[cuda100]==2.2.2
-tensorflow-gpu==2.1.0
-tensorflow-hub
 textblob
 textdistance
 texttable
