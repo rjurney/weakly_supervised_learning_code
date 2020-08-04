@@ -2,7 +2,7 @@
 
 #
 # Convert the Stack Overflow data from XML format to Parquet format for performance reasons.
-# Run me with: PYSPARK_DRIVER_PYTHON=ipython3 PYSPARK_PYTHON=python3 pyspark --packages com.databricks:spark-xml_2.11:0.8.0
+# Run me with: PYSPARK_DRIVER_PYTHON=ipython3 PYSPARK_PYTHON=python3 pyspark --packages com.databricks:spark-xml_2.11:0.9.0
 #
 
 import json
@@ -14,12 +14,6 @@ import pyspark.sql.functions as F
 # Initialize PySpark
 spark = SparkSession.builder.appName('Weakly Supervised Learning - Convert XML to Parquet').getOrCreate()
 sc = spark.sparkContext
-
-# Load the many paths from a JSON file
-PATH_SET = 's3'
-PATHS = json.load(
-    open('paths.json')
-)
 
 
 def remove_prefix(df):
@@ -40,7 +34,7 @@ def remove_prefix(df):
 posts_df = spark.read.format('xml')\
                 .options(rowTag='row')\
                 .options(rootTag='posts')\
-                .load(PATHS['posts_xml'][PATH_SET])
+                .load('s3://stackoverflow-events/2020-06-01/Posts.xml')
 
 # Remove the _ prefix from field names
 posts_df = remove_prefix(posts_df)
@@ -48,14 +42,14 @@ posts_df = remove_prefix(posts_df)
 # Write the DataFrame out to Parquet format
 posts_df.write\
         .mode('overwrite')\
-        .parquet(PATHS['posts'][PATH_SET])
+        .parquet('s3://stackoverflow-events/2020-06-01/Posts.parquet')
 
 
 # Use Spark-XML to split the XML file into records
 users_df = spark.read.format('xml')\
                 .options(rowTag='row')\
                 .options(rootTag='users')\
-                .load(PATHS['users_xml'][PATH_SET])
+                .load('s3://stackoverflow-events/2020-06-01/Users.xml')
 
 # Remove the _ prefix from field names
 users_df = remove_prefix(users_df)
@@ -63,64 +57,64 @@ users_df = remove_prefix(users_df)
 # Write the DataFrame out to Parquet format
 users_df.write\
         .mode('overwrite')\
-        .parquet(PATHS['users'][PATH_SET])
+        .parquet('s3://stackoverflow-events/2020-06-01/Users.parquet')
 
 
-# Use Spark-XML to split the XML file into records
-tags_df = spark.read.format('xml')\
-               .options(rowTag='row')\
-               .options(rootTag='tags')\
-               .load(PATHS['tags_xml'][PATH_SET])
+# # Use Spark-XML to split the XML file into records
+# tags_df = spark.read.format('xml')\
+#                .options(rowTag='row')\
+#                .options(rootTag='tags')\
+#                .load('s3://stackoverflow-events/2020-06-01/Tags.xml')
 
-# Remove the _ prefix from field names
-tags_df = remove_prefix(tags_df)
+# # Remove the _ prefix from field names
+# tags_df = remove_prefix(tags_df)
 
-# Write the DataFrame out to Parquet format
-tags_df.write\
-       .mode('overwrite')\
-       .parquet(PATHS['tags'][PATH_SET])
-
-
-# Use Spark-XML to split the XML file into records
-badges_df = spark.read.format('xml')\
-                      .options(rowTag='row')\
-                      .options(rootTag='badges')\
-                      .load(PATHS['badges_xml'][PATH_SET])
-
-# Remove the _ prefix from field names
-badges_df = remove_prefix(badges_df)
-
-# Write the DataFrame out to Parquet format
-badges_df.write\
-         .mode('overwrite')\
-         .parquet(PATHS['badges'][PATH_SET])
+# # Write the DataFrame out to Parquet format
+# tags_df.write\
+#        .mode('overwrite')\
+#        .parquet('s3://stackoverflow-events/2020-06-01/Tags.parquet')
 
 
-# Use Spark-XML to split the XML file into records
-comments_df = spark.read.format('xml')\
-                        .options(rowTag='row')\
-                        .options(rootTag='comments')\
-                        .load(PATHS['comments_xml'][PATH_SET])
+# # Use Spark-XML to split the XML file into records
+# badges_df = spark.read.format('xml')\
+#                       .options(rowTag='row')\
+#                       .options(rootTag='badges')\
+#                       .load('s3://stackoverflow-events/2020-06-01/Badges.xml')
 
-# Remove the _ prefix from field names
-comments_df = remove_prefix(comments_df)
+# # Remove the _ prefix from field names
+# badges_df = remove_prefix(badges_df)
 
-# Write the DataFrame out to Parquet format
-comments_df.write\
-           .mode('overwrite')\
-           .parquet(PATHS['comments'][PATH_SET])
+# # Write the DataFrame out to Parquet format
+# badges_df.write\
+#          .mode('overwrite')\
+#          .parquet('s3://stackoverflow-events/2020-06-01/Badges.parquet')
 
 
-# Use Spark-XML to split the XML file into records
-post_links_df = spark.read.format('xml')\
-                     .options(rowTag='row')\
-                     .options(rootTag='postlinks')\
-                     .load(PATHS['postlinks_xml'][PATH_SET])
+# # Use Spark-XML to split the XML file into records
+# comments_df = spark.read.format('xml')\
+#                         .options(rowTag='row')\
+#                         .options(rootTag='comments')\
+#                         .load('s3://stackoverflow-events/2020-06-01/Comments.xml')
 
-# Remove the _ prefix from field names
-post_links_df = remove_prefix(post_links_df)
+# # Remove the _ prefix from field names
+# comments_df = remove_prefix(comments_df)
 
-# Write the DataFrame out to Parquet format
-post_links_df.write\
-             .mode('overwrite')\
-             .parquet(PATHS['postlinks'][PATH_SET])
+# # Write the DataFrame out to Parquet format
+# comments_df.write\
+#            .mode('overwrite')\
+#            .parquet('s3://stackoverflow-events/2020-06-01/Comments.parquet')
+
+
+# # Use Spark-XML to split the XML file into records
+# post_links_df = spark.read.format('xml')\
+#                      .options(rowTag='row')\
+#                      .options(rootTag='postlinks')\
+#                      .load('s3://stackoverflow-events/2020-06-01/PostLinks.xml')
+
+# # Remove the _ prefix from field names
+# post_links_df = remove_prefix(post_links_df)
+
+# # Write the DataFrame out to Parquet format
+# post_links_df.write\
+#              .mode('overwrite')\
+#              .parquet('s3://stackoverflow-events/2020-06-01/PostLinks.parquet')
