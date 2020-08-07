@@ -12,6 +12,7 @@ ipython
 iso8601
 jupyter
 lxml
+mlxtend
 munkres
 nltk
 numpy>=1.16.0
