@@ -1,6 +1,6 @@
-# Weakly Supervised Learning (O'Reilly Media, 2020)
+# Weakly Supervised Learning
 
-This is the source code for the book *Weakly Supervied Learning: Doing More with Less Data* (O'Reilly, 2020) by Russell Jurney. The book itself is open source and can be found at <https://github.com/rjurney/weakly_supervised_learning> :)
+This is the source code for the book *Weakly Supervied Learning* an incomplete book from 2019-2020 by Russell Jurney. The book itself is open source and can be found at <https://github.com/rjurney/weakly_supervised_learning> :)
 
 In my previous book, [Agile Data Science 2.0](http://shop.oreilly.com/product/0636920051619.do) (O’Reilly Media, 2017), I [setup EC2 and Vagrant environments](https://github.com/rjurney/Agile_Data_Code_2) in which to run the book’s code but since 2017 the Python ecosystem has developed to the point that I am going to refrain from providing thorough installation documentation for every requirement. In this book I provide a Docker setup that is easy to use and also provide Anaconda and PyPi environments if you wish the run the code yourself locally. The website for each library is a better resource than I can possibly create, and they are updated and maintained more frequently than this book. I will instead list requirements, link to the project pages and let the reader install the requirements themselves. If you want to use a pre-built environment, use the `Dockerfile` and  `docker-compose.yml` files included in the [code repository for the book](https://github.com/rjurney/weakly_supervised_learning_code) will “just work” on any operating system that Docker runs on: Linux, Mac OS X, Windows.
 
